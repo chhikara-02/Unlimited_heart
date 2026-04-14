@@ -2,8 +2,8 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Hearts & Roses 🌹💖 – Pastel Edition</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+<title>Hearts & Roses 🌹💖 – Mobile Ready</title>
 
 <style>
 body {
@@ -12,6 +12,7 @@ body {
   font-family: 'Segoe UI', Arial, sans-serif;
   text-align: center;
   overflow-x: hidden;
+  touch-action: pan-y;
 }
 
 /* Counter & Message – Lavender & Pastel */
@@ -21,7 +22,7 @@ body {
   width: 100%;
   font-size: 18px;
   z-index: 10;
-  color: #DCD0FF;   /* soft lavender */
+  color: #DCD0FF;
   text-shadow: 0 0 2px #000;
   font-weight: bold;
 }
@@ -29,20 +30,16 @@ body {
 #message {
   position: fixed;
   top: 45px;
-  width: 100%;
-  color: #E6E6FA;   /* lavender */
-  font-size: 18px;
+  width: 90%;
+  left: 5%;
+  color: #E6E6FA;
+  font-size: 16px;
   z-index: 10;
   font-weight: 500;
   letter-spacing: 0.5px;
-  background: rgba(0,0,0,0.4);
-  padding: 5px;
+  background: rgba(0,0,0,0.5);
+  padding: 8px 12px;
   border-radius: 30px;
-  width: fit-content;
-  margin-left: auto;
-  margin-right: auto;
-  left: 0;
-  right: 0;
   backdrop-filter: blur(2px);
 }
 
@@ -68,7 +65,7 @@ body {
   padding: 12px 24px;
   border-radius: 40px;
   border: none;
-  background: #FFB7B2;   /* pastel pink */
+  background: #FFB7B2;
   color: #3b2b2b;
   font-weight: bold;
   font-size: 1rem;
@@ -76,10 +73,10 @@ body {
   z-index: 20;
   box-shadow: 0 4px 12px rgba(0,0,0,0.3);
   transition: 0.2s;
+  touch-action: manipulation;
 }
-#exploreBtn:hover {
-  background: #ffa69e;
-  transform: translateX(-50%) scale(1.02);
+#exploreBtn:active {
+  transform: translateX(-50%) scale(0.97);
 }
 
 /* Song Popup Panel */
@@ -88,7 +85,7 @@ body {
   bottom: 0;
   width: 100%;
   max-height: 65%;
-  background: #1a1a2e;   /* deep dark with purple hue */
+  background: #1a1a2e;
   display: none;
   overflow-y: auto;
   z-index: 20;
@@ -105,15 +102,30 @@ body {
   font-weight: bold;
   text-align: center;
   cursor: pointer;
-  transition: 0.2s;
+  transition: 0.1s;
   color: #1e2a2e;
-  backdrop-filter: brightness(0.98);
   box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+  touch-action: manipulation;
 }
-.songItem:hover {
-  transform: scale(1.01);
-  filter: brightness(0.96);
-  box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+.songItem:active {
+  transform: scale(0.98);
+}
+
+/* Audio status message */
+#audioStatus {
+  position: fixed;
+  bottom: 80px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: rgba(0,0,0,0.7);
+  color: #FFB7B2;
+  padding: 6px 14px;
+  border-radius: 30px;
+  font-size: 12px;
+  z-index: 25;
+  pointer-events: none;
+  white-space: nowrap;
+  font-weight: bold;
 }
 
 /* Hide original music buttons container */
@@ -136,10 +148,11 @@ body {
 </head>
 <body>
 
-<div id="counter">💕 Hearts: 0  🌹 Roses: 0</div>
+<div id="counter">💕 Hearts: 0 🌹 Roses: 0</div>
 <div id="message">🎵 every song blooms with a different pastel dream 🎨</div>
+<div id="audioStatus">⚡ tap any song to enable audio</div>
 
-<button id="exploreBtn" onclick="toggleSongs()">🌸 Explore Songs 🎶</button>
+<button id="exploreBtn">🌸 Explore Songs 🎶</button>
 
 <div id="songBox"></div>
 
@@ -162,6 +175,29 @@ body {
 
 <script>
 let player = document.getElementById("player");
+let audioUnlocked = false;
+
+/* ========== MOBILE AUDIO UNLOCK ========== */
+function unlockAudio() {
+  if (!audioUnlocked) {
+    // Create and play silent audio to unlock mobile Chrome
+    let silentTest = new Audio();
+    silentTest.volume = 0;
+    silentTest.play().then(() => {
+      silentTest.pause();
+      audioUnlocked = true;
+      document.getElementById("audioStatus").innerHTML = "🎵 ready! tap any song 🎵";
+      document.getElementById("audioStatus").style.color = "#c7a4ff";
+      console.log("✅ Audio unlocked for mobile");
+    }).catch(e => {
+      console.log("Tap again to unlock audio");
+    });
+  }
+}
+
+// Unlock on ANY touch/click anywhere on page
+document.body.addEventListener("touchstart", unlockAudio, { once: false });
+document.body.addEventListener("click", unlockAudio);
 
 /* SONG LIST */
 const songs = [
@@ -178,7 +214,7 @@ const songs = [
 {name:"Dhokha Dhadi", file:"Dhokha Dhadi R... Rajkumar 320 Kbps.mp3"}
 ];
 
-/* ---------- PASTEL COLOR PALETTE for each song option ---------- */
+/* PASTEL COLOR PALETTE for each song option */
 const pastelColors = [
   "#FFB7B2",  // pastel pink
   "#B5EAD7",  // mint
@@ -204,15 +240,23 @@ songs.forEach((song, index) => {
   div.className = "songItem";
   div.innerText = song.name;
   
-  // assign a unique pastel color (cycle through palette)
   let colorIndex = index % pastelColors.length;
   div.style.backgroundColor = pastelColors[colorIndex];
-  div.style.color = "#2c3e2f";   // deep green-gray for contrast
+  div.style.color = "#2c3e2f";
   div.style.textShadow = "none";
   
   div.onclick = () => {
-    player.src = song.file;
-    player.play();
+    // Try to unlock audio again just in case
+    if (!audioUnlocked) {
+      unlockAudio();
+      setTimeout(() => {
+        player.src = song.file;
+        player.play().catch(e => console.log("Play error:", e));
+      }, 100);
+    } else {
+      player.src = song.file;
+      player.play().catch(e => console.log("Play error:", e));
+    }
     songBox.style.display = "none";
   };
   
@@ -224,14 +268,16 @@ function toggleSongs() {
   songBox.style.display = songBox.style.display === "block" ? "none" : "block";
 }
 
-/* ---------- MORE INTERESTING HEART & ROSE EMOJIS ---------- */
+document.getElementById("exploreBtn").onclick = toggleSongs;
+
+/* HEART & ROSE EMOJIS - FIXED COMMA ISSUE */
 let hearts = 0, roses = 0;
 
-// Expanded collection: hearts + creative heart variations, plus rose & romantic flowers
+// FIXED: Added missing commas between emojis
 let emojis = [
-  "❤️", "💖", "💘", "💝", "💗", "💓", "💞", "💕"        // classic hearts
-  "❣️", "💌", "❤️‍🔥",                                    // extra heart vibes
-  "🌹", "🌺", "🌸", "🌼", "🌻", "🌷", "🏵️", "💐"     // roses + romantic flowers
+  "❤️", "💖", "💘", "💝", "💗", "💓", "💞", "💕",  // classic hearts
+  "❣️", "💌", "❤️‍🔥", "💟", "🧡", "💛", "💚", "💙", "💜", // extra hearts
+  "🌹", "🥀", "🌺", "🌸", "🌼", "🌻", "🌷", "🏵️", "💐"  // roses + flowers
 ];
 
 function createEmoji() {
@@ -242,25 +288,25 @@ function createEmoji() {
   e.innerText = rand;
   
   e.style.left = Math.random() * 100 + "vw";
-  e.style.animationDuration = (1.5 + Math.random() * 2) + "s";
+  e.style.animationDuration = (2 + Math.random() * 3) + "s";
   e.style.fontSize = (20 + Math.random() * 18) + "px";
   
   document.body.appendChild(e);
   
-  // count roses (🌹, 🌺, 🌸, 🌼, 🌻, 🌷, 🏵️, 💐) as roses? Keep original spirit: count classical rose + similar flowers as "roses"
-  if (rand === "🌹" || rand === "🌺" || rand === "🌸" || rand === "🌼" || rand === "🌻" || rand === "🌷" || rand === "🏵️" || rand === "💐") {
+  // Count roses vs hearts
+  if (rand === "🌹" || rand === "🥀" || rand === "🌺" || rand === "🌸" || rand === "🌼" || rand === "🌻" || rand === "🌷" || rand === "🏵️" || rand === "💐") {
     roses++;
   } else {
     hearts++;
   }
   
-  document.getElementById("counter").innerHTML = `💕 Hearts: ${hearts}  🌹 Roses: ${roses}`;
+  document.getElementById("counter").innerHTML = `💕 Hearts: ${hearts} 🌹 Roses: ${roses}`;
   
-  setTimeout(() => e.remove(), 6000);
+  setTimeout(() => e.remove(), 5000);
 }
 
-// create emojis more frequently for a lively feel
-setInterval(createEmoji, 35);
+// Create emojis every 120ms (smooth performance)
+setInterval(createEmoji, 120);
 </script>
 
 </body>
