@@ -2,29 +2,38 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
-<title>Hearts & Roses 🌹💖 – Mobile Ready</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes, viewport-fit=cover">
+<title>Hearts & Roses 🌹💖 – Now Playing</title>
 
 <style>
-body {
+* {
   margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  -webkit-tap-highlight-color: transparent;
+}
+
+body {
+  min-height: 100vh;
   background: black;
-  font-family: 'Segoe UI', Arial, sans-serif;
+  font-family: 'Segoe UI', -apple-system, BlinkMacSystemFont, Arial, sans-serif;
   text-align: center;
   overflow-x: hidden;
   touch-action: pan-y;
+  padding-bottom: 140px; /* space for bottom controls */
 }
 
-/* Counter & Message – Lavender & Pastel */
+/* Counter & Message – Lavender */
 #counter {
   position: fixed;
   top: 10px;
   width: 100%;
-  font-size: 18px;
+  font-size: clamp(14px, 5vw, 18px);
   z-index: 10;
   color: #DCD0FF;
   text-shadow: 0 0 2px #000;
   font-weight: bold;
+  padding: 0 10px;
 }
 
 #message {
@@ -33,20 +42,22 @@ body {
   width: 90%;
   left: 5%;
   color: #E6E6FA;
-  font-size: 16px;
+  font-size: clamp(12px, 4vw, 16px);
   z-index: 10;
   font-weight: 500;
-  letter-spacing: 0.5px;
   background: rgba(0,0,0,0.5);
   padding: 8px 12px;
   border-radius: 30px;
-  backdrop-filter: blur(2px);
+  backdrop-filter: blur(3px);
+  white-space: nowrap;
+  overflow-x: auto;
+  text-overflow: ellipsis;
 }
 
 /* Falling Emojis */
 .emoji {
   position: absolute;
-  font-size: 26px;
+  font-size: clamp(20px, 6vw, 30px);
   animation: fall linear infinite;
   pointer-events: none;
   z-index: 5;
@@ -56,7 +67,88 @@ body {
   to { transform: translateY(110vh); }
 }
 
-/* Explore Button – Pastel Pink */
+/* NOW PLAYING SECTION */
+#nowPlaying {
+  position: fixed;
+  bottom: 85px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 92%;
+  background: rgba(26, 26, 46, 0.95);
+  backdrop-filter: blur(10px);
+  border-radius: 20px;
+  padding: 12px 16px;
+  z-index: 19;
+  box-shadow: 0 4px 20px rgba(0,0,0,0.5);
+  border: 1px solid rgba(199, 164, 255, 0.3);
+  transition: all 0.3s ease;
+}
+
+#songTitle {
+  font-size: clamp(13px, 4vw, 16px);
+  font-weight: bold;
+  color: #E6E6FA;
+  margin-bottom: 8px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  padding: 0 5px;
+}
+
+#timelineContainer {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  width: 100%;
+}
+
+#currentTime, #duration {
+  font-size: 11px;
+  color: #c7a4ff;
+  min-width: 35px;
+  text-align: center;
+}
+
+#seekSlider {
+  flex: 1;
+  height: 4px;
+  -webkit-appearance: none;
+  background: #3d3d5c;
+  border-radius: 5px;
+  outline: none;
+}
+
+#seekSlider::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  width: 14px;
+  height: 14px;
+  background: #FFB7B2;
+  border-radius: 50%;
+  cursor: pointer;
+  box-shadow: 0 0 5px #FFB7B2;
+}
+
+#seekSlider::-webkit-slider-thumb:active {
+  transform: scale(1.2);
+}
+
+#playPauseBtn {
+  background: #FFB7B2;
+  border: none;
+  border-radius: 30px;
+  padding: 6px 14px;
+  font-size: 14px;
+  font-weight: bold;
+  color: #3b2b2b;
+  cursor: pointer;
+  touch-action: manipulation;
+  margin-left: 5px;
+}
+#playPauseBtn:active {
+  transform: scale(0.95);
+}
+
+/* Explore Button */
 #exploreBtn {
   position: fixed;
   bottom: 20px;
@@ -68,12 +160,13 @@ body {
   background: #FFB7B2;
   color: #3b2b2b;
   font-weight: bold;
-  font-size: 1rem;
+  font-size: clamp(14px, 4vw, 16px);
   cursor: pointer;
   z-index: 20;
   box-shadow: 0 4px 12px rgba(0,0,0,0.3);
   transition: 0.2s;
   touch-action: manipulation;
+  white-space: nowrap;
 }
 #exploreBtn:active {
   transform: translateX(-50%) scale(0.97);
@@ -84,17 +177,17 @@ body {
   position: fixed;
   bottom: 0;
   width: 100%;
-  max-height: 65%;
+  max-height: 60%;
   background: #1a1a2e;
   display: none;
   overflow-y: auto;
   z-index: 20;
   border-radius: 28px 28px 0 0;
-  padding: 12px 0;
-  box-shadow: 0 -5px 20px rgba(0,0,0,0.5);
+  padding: 12px 0 20px;
+  box-shadow: 0 -5px 20px rgba(0,0,0,0.6);
 }
 
-/* Each song item – different pastel background */
+/* Song items – pastel colors */
 .songItem {
   padding: 14px 18px;
   margin: 8px 16px;
@@ -106,34 +199,17 @@ body {
   color: #1e2a2e;
   box-shadow: 0 2px 5px rgba(0,0,0,0.1);
   touch-action: manipulation;
+  font-size: clamp(14px, 4vw, 16px);
 }
 .songItem:active {
   transform: scale(0.98);
 }
 
-/* Audio status message */
-#audioStatus {
-  position: fixed;
-  bottom: 80px;
-  left: 50%;
-  transform: translateX(-50%);
-  background: rgba(0,0,0,0.7);
-  color: #FFB7B2;
-  padding: 6px 14px;
-  border-radius: 30px;
-  font-size: 12px;
-  z-index: 25;
-  pointer-events: none;
-  white-space: nowrap;
-  font-weight: bold;
-}
-
-/* Hide original music buttons container */
 #music {
   display: none;
 }
 
-/* Scrollbar pastel touch */
+/* Scrollbar */
 #songBox::-webkit-scrollbar {
   width: 6px;
 }
@@ -144,60 +220,117 @@ body {
   background: #c7a4ff;
   border-radius: 10px;
 }
+
+/* Hide status when playing */
+#audioStatus {
+  display: none;
+}
 </style>
 </head>
 <body>
 
 <div id="counter">💕 Hearts: 0 🌹 Roses: 0</div>
-<div id="message">🎵 every song blooms with a different pastel dream 🎨</div>
-<div id="audioStatus">⚡ tap any song to enable audio</div>
+<div id="message">🎵 pick a song – pastel dreams await 🎨</div>
+
+<!-- NOW PLAYING SECTION -->
+<div id="nowPlaying" style="display: none;">
+  <div id="songTitle">✨ No song playing</div>
+  <div id="timelineContainer">
+    <span id="currentTime">0:00</span>
+    <input type="range" id="seekSlider" value="0" step="0.01">
+    <span id="duration">0:00</span>
+    <button id="playPauseBtn">⏸ Pause</button>
+  </div>
+</div>
 
 <button id="exploreBtn">🌸 Explore Songs 🎶</button>
-
 <div id="songBox"></div>
-
 <audio id="player"></audio>
 
-<!-- hidden original song structure (kept for compatibility) -->
-<div id="music">
-<button onclick="playSong('Love Me Thoda Aur Yaariyan 320 Kbps.mp3', this)"><span class="title">Love Me Thoda Aur</span><div class="controls"><span class="time"></span><input type="range" class="seek"></div></button>
-<button onclick="playSong('Waalian Harnoor 320 Kbps.mp3', this)"><span class="title">Waalian</span></button>
-<button onclick="playSong('Tu Hi Haqeeqat Tum Mile Original Motion Picturetrack 320 Kbps.mp3', this)"><span class="title">Tu Hi Haqeeqat</span></button>
-<button onclick="playSong('Thinking Of You Ap Dhillon 320 Kbps.mp3', this)"><span class="title">Thinking Of You</span></button>
-<button onclick="playSong('Tera Hone Laga Hoon Ajab Prem Ki Ghazab Kahani 320 Kbps.mp3', this)"><span class="title">Tera Hone Laga Hu</span></button>
-<button onclick="playSong('Soniyo Raaz The Mystery Continuous 320 Kbps.mp3', this)"><span class="title">Soniyo</span></button>
-<button onclick="playSong('Mere Rang Mein Rangne Wali Maine Pyar Kiya 320 Kbps.mp3', this)"><span class="title">Mere Rang Mein</span></button>
-<button onclick="playSong('Main Rang Sharbaton Ka Phata Poster Nikhla Hero 320 Kbps.mp3', this)"><span class="title">Main Rang Sharbaton Ka</span></button>
-<button onclick="playSong('Ishq Bulaava Hasee Toh Phasee 320 Kbps.mp3', this)"><span class="title">Ishq Bulaava</span></button>
-<button onclick="playSong('Girl I Need You Baaghi 320 Kbps.mp3', this)"><span class="title">Girl I Need You</span></button>
-<button onclick="playSong('Dhokha Dhadi R... Rajkumar 320 Kbps.mp3', this)"><span class="title">Dhokha Dhadi</span></button>
-</div>
+<div id="music"></div>
 
 <script>
 let player = document.getElementById("player");
 let audioUnlocked = false;
+let currentSongName = "";
+
+// DOM elements
+const nowPlayingDiv = document.getElementById("nowPlaying");
+const songTitleSpan = document.getElementById("songTitle");
+const seekSlider = document.getElementById("seekSlider");
+const currentTimeSpan = document.getElementById("currentTime");
+const durationSpan = document.getElementById("duration");
+const playPauseBtn = document.getElementById("playPauseBtn");
 
 /* ========== MOBILE AUDIO UNLOCK ========== */
 function unlockAudio() {
   if (!audioUnlocked) {
-    // Create and play silent audio to unlock mobile Chrome
     let silentTest = new Audio();
     silentTest.volume = 0;
     silentTest.play().then(() => {
       silentTest.pause();
       audioUnlocked = true;
-      document.getElementById("audioStatus").innerHTML = "🎵 ready! tap any song 🎵";
-      document.getElementById("audioStatus").style.color = "#c7a4ff";
-      console.log("✅ Audio unlocked for mobile");
-    }).catch(e => {
-      console.log("Tap again to unlock audio");
-    });
+      console.log("✅ Audio unlocked");
+    }).catch(e => console.log("Tap to unlock audio"));
+  }
+}
+document.body.addEventListener("touchstart", unlockAudio, { once: false });
+document.body.addEventListener("click", unlockAudio);
+
+/* ========== UPDATE TIMELINE ========== */
+function updateTimeline() {
+  if (!isNaN(player.duration) && player.duration !== Infinity) {
+    const progress = (player.currentTime / player.duration) * 100;
+    seekSlider.value = player.currentTime;
+    durationSpan.innerText = formatTime(player.duration);
+    currentTimeSpan.innerText = formatTime(player.currentTime);
   }
 }
 
-// Unlock on ANY touch/click anywhere on page
-document.body.addEventListener("touchstart", unlockAudio, { once: false });
-document.body.addEventListener("click", unlockAudio);
+function formatTime(seconds) {
+  if (isNaN(seconds)) return "0:00";
+  const mins = Math.floor(seconds / 60);
+  const secs = Math.floor(seconds % 60);
+  return `${mins}:${secs < 10 ? "0" : ""}${secs}`;
+}
+
+player.addEventListener("timeupdate", updateTimeline);
+player.addEventListener("loadedmetadata", () => {
+  durationSpan.innerText = formatTime(player.duration);
+  seekSlider.max = player.duration;
+  seekSlider.value = 0;
+});
+
+seekSlider.addEventListener("input", (e) => {
+  player.currentTime = e.target.value;
+  if (player.paused && player.currentTime > 0) {
+    // optional: keep paused
+  }
+});
+
+playPauseBtn.addEventListener("click", () => {
+  if (player.paused) {
+    player.play();
+    playPauseBtn.innerText = "⏸ Pause";
+  } else {
+    player.pause();
+    playPauseBtn.innerText = "▶ Play";
+  }
+});
+
+player.addEventListener("play", () => {
+  playPauseBtn.innerText = "⏸ Pause";
+});
+
+player.addEventListener("pause", () => {
+  playPauseBtn.innerText = "▶ Play";
+});
+
+player.addEventListener("ended", () => {
+  playPauseBtn.innerText = "▶ Play";
+  seekSlider.value = 0;
+  currentTimeSpan.innerText = "0:00";
+});
 
 /* SONG LIST */
 const songs = [
@@ -214,27 +347,16 @@ const songs = [
 {name:"Dhokha Dhadi", file:"Dhokha Dhadi R... Rajkumar 320 Kbps.mp3"}
 ];
 
-/* PASTEL COLOR PALETTE for each song option */
+/* PASTEL COLOR PALETTE */
 const pastelColors = [
-  "#FFB7B2",  // pastel pink
-  "#B5EAD7",  // mint
-  "#FFDAC1",  // peach
-  "#C7CEEA",  // periwinkle
-  "#E2F0CB",  // soft lime
-  "#FDE2C4",  // sand
-  "#FFC8DD",  // baby rose
-  "#BDE0FE",  // baby blue
-  "#D4E2D4",  // sage
-  "#FBC8B5",  // apricot
-  "#E6E6FA",  // lavender
-  "#C9E4DE",  // seafoam
-  "#FED7B0",  // warm apricot
-  "#F9D6E0"   // cotton candy
+  "#FFB7B2", "#B5EAD7", "#FFDAC1", "#C7CEEA", "#E2F0CB",
+  "#FDE2C4", "#FFC8DD", "#BDE0FE", "#D4E2D4", "#FBC8B5",
+  "#E6E6FA", "#C9E4DE", "#FED7B0", "#F9D6E0"
 ];
 
 let songBox = document.getElementById("songBox");
 
-/* CREATE POPUP LIST with DIFFERENT PASTEL BACKGROUNDS */
+/* CREATE SONG LIST */
 songs.forEach((song, index) => {
   let div = document.createElement("div");
   div.className = "songItem";
@@ -243,41 +365,45 @@ songs.forEach((song, index) => {
   let colorIndex = index % pastelColors.length;
   div.style.backgroundColor = pastelColors[colorIndex];
   div.style.color = "#2c3e2f";
-  div.style.textShadow = "none";
   
   div.onclick = () => {
-    // Try to unlock audio again just in case
-    if (!audioUnlocked) {
-      unlockAudio();
-      setTimeout(() => {
-        player.src = song.file;
-        player.play().catch(e => console.log("Play error:", e));
-      }, 100);
-    } else {
+    if (!audioUnlocked) unlockAudio();
+    
+    setTimeout(() => {
       player.src = song.file;
       player.play().catch(e => console.log("Play error:", e));
-    }
+      currentSongName = song.name;
+      songTitleSpan.innerText = `🎵 ${song.name}`;
+      nowPlayingDiv.style.display = "block";
+      playPauseBtn.innerText = "⏸ Pause";
+      
+      // Reset timeline
+      setTimeout(() => {
+        if (!isNaN(player.duration)) {
+          seekSlider.max = player.duration;
+        }
+      }, 100);
+    }, 50);
+    
     songBox.style.display = "none";
   };
   
   songBox.appendChild(div);
 });
 
-/* TOGGLE POPUP */
+/* TOGGLE SONGS */
 function toggleSongs() {
   songBox.style.display = songBox.style.display === "block" ? "none" : "block";
 }
-
 document.getElementById("exploreBtn").onclick = toggleSongs;
 
-/* HEART & ROSE EMOJIS - FIXED COMMA ISSUE */
+/* EMOJIS */
 let hearts = 0, roses = 0;
 
-// FIXED: Added missing commas between emojis
 let emojis = [
-  "❤️", "💖", "💘", "💝", "💗", "💓", "💞", "💕",  // classic hearts
-  "❣️", "💌", "❤️‍🔥", "💟", "🧡", "💛", "💚", "💙", "💜", // extra hearts
-  "🌹", "🥀", "🌺", "🌸", "🌼", "🌻", "🌷", "🏵️", "💐"  // roses + flowers
+  "❤️", "💖", "💘", "💝", "💗", "💓", "💞", "💕",
+  "❣️", "💌", "❤️‍🔥", "💟", "🧡", "💛", "💚", "💙", "💜",
+  "🌹", "🥀", "🌺", "🌸", "🌼", "🌻", "🌷", "🏵️", "💐"
 ];
 
 function createEmoji() {
@@ -289,24 +415,21 @@ function createEmoji() {
   
   e.style.left = Math.random() * 100 + "vw";
   e.style.animationDuration = (2 + Math.random() * 3) + "s";
-  e.style.fontSize = (20 + Math.random() * 18) + "px";
+  e.style.fontSize = (18 + Math.random() * 20) + "px";
   
   document.body.appendChild(e);
   
-  // Count roses vs hearts
-  if (rand === "🌹" || rand === "🥀" || rand === "🌺" || rand === "🌸" || rand === "🌼" || rand === "🌻" || rand === "🌷" || rand === "🏵️" || rand === "💐") {
+  if (["🌹","🥀","🌺","🌸","🌼","🌻","🌷","🏵️","💐"].includes(rand)) {
     roses++;
   } else {
     hearts++;
   }
   
   document.getElementById("counter").innerHTML = `💕 Hearts: ${hearts} 🌹 Roses: ${roses}`;
-  
   setTimeout(() => e.remove(), 5000);
 }
 
-// Create emojis every 120ms (smooth performance)
-setInterval(createEmoji, 120);
+setInterval(createEmoji, 130);
 </script>
 
 </body>
