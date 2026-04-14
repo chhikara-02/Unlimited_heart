@@ -1,0 +1,282 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>Hearts & Roses 🌹💖</title>
+
+<style>
+body {
+  margin: 0;
+  overflow: hidden;
+  overflow-x: hidden;
+  background: black;
+  color: white;
+  font-family: Arial, sans-serif;
+  text-align: center;
+  padding-bottom: 45vh;
+}
+
+#counter {
+  position: fixed;
+  top: 10px;
+  width: 100%;
+  font-size: 16px;
+  font-weight: bold;
+  z-index: 10;
+}
+
+#message {
+  position: fixed;
+  top: 40px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 90%;
+  padding: 10px;
+  font-size: 16px;
+  color: rgb(167, 204, 35);
+  background: rgba(0, 0, 0, 0.65);
+  border-radius: 12px;
+  z-index: 10;
+}
+
+.emoji {
+  position: absolute;
+  font-size: 24px;
+  animation: fall linear infinite;
+}
+
+@keyframes fall {
+  from { transform: translateY(-10vh); }
+  to { transform: translateY(110vh); }
+}
+
+/* Music Panel */
+#music {
+  position: fixed;
+  bottom: 0;
+  width: 100%;
+  max-height: 40vh;
+  overflow-y: auto;
+  background: rgba(0,0,0,0.9);
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  padding: 5px;
+}
+
+button {
+  width: 48%;
+  margin: 1%;
+  padding: 8px;
+  border-radius: 10px;
+  border: none;
+  background: pink;
+  text-align: left;
+  font-size: 12px;
+}
+
+button.active {
+  background: hotpink;
+}
+
+.controls {
+  display: none;
+  margin-top: 5px;
+}
+
+.seek {
+  width: 100%;
+}
+</style>
+</head>
+
+<body>
+
+<div id="counter">Hearts: 0 🌹: 0</div>
+<div id="message"></div>
+
+<audio id="player"></audio>
+
+<div id="music">
+
+<!-- ALL 11 SONGS -->
+
+<button onclick="playSong('Love Me Thoda Aur Yaariyan 320 Kbps.mp3', this)">
+<span class="title">Love Me Thoda Aur</span>
+<div class="controls"><span class="time">0:00 / 0:00</span><input type="range" class="seek"></div>
+</button>
+
+<button onclick="playSong('Waalian Harnoor 320 Kbps.mp3', this)">
+<span class="title">Waalian</span>
+<div class="controls"><span class="time">0:00 / 0:00</span><input type="range" class="seek"></div>
+</button>
+
+<button onclick="playSong('Tu Hi Haqeeqat Tum Mile Original Motion Picturetrack 320 Kbps.mp3', this)">
+<span class="title">Tu Hi Haqeeqat</span>
+<div class="controls"><span class="time">0:00 / 0:00</span><input type="range" class="seek"></div>
+</button>
+
+<button onclick="playSong('Thinking Of You Ap Dhillon 320 Kbps.mp3', this)">
+<span class="title">Thinking Of You</span>
+<div class="controls"><span class="time">0:00 / 0:00</span><input type="range" class="seek"></div>
+</button>
+
+<button onclick="playSong('Tera Hone Laga Hoon Ajab Prem Ki Ghazab Kahani 320 Kbps.mp3', this)">
+<span class="title">Tera Hone Laga Hu</span>
+<div class="controls"><span class="time">0:00 / 0:00</span><input type="range" class="seek"></div>
+</button>
+
+<button onclick="playSong('Soniyo Raaz The Mystery Continuous 320 Kbps.mp3', this)">
+<span class="title">Soniyo</span>
+<div class="controls"><span class="time">0:00 / 0:00</span><input type="range" class="seek"></div>
+</button>
+
+<button onclick="playSong('Mere Rang Mein Rangne Wali Maine Pyar Kiya 320 Kbps.mp3', this)">
+<span class="title">Mere Rang Mein</span>
+<div class="controls"><span class="time">0:00 / 0:00</span><input type="range" class="seek"></div>
+</button>
+
+<button onclick="playSong('Main Rang Sharbaton Ka Phata Poster Nikhla Hero 320 Kbps.mp3', this)">
+<span class="title">Main Rang Sharbaton Ka</span>
+<div class="controls"><span class="time">0:00 / 0:00</span><input type="range" class="seek"></div>
+</button>
+
+<button onclick="playSong('Ishq Bulaava Hasee Toh Phasee 320 Kbps.mp3', this)">
+<span class="title">Ishq Bulaava</span>
+<div class="controls"><span class="time">0:00 / 0:00</span><input type="range" class="seek"></div>
+</button>
+
+<button onclick="playSong('Girl I Need You Baaghi 320 Kbps.mp3', this)">
+<span class="title">Girl I Need You</span>
+<div class="controls"><span class="time">0:00 / 0:00</span><input type="range" class="seek"></div>
+</button>
+
+</div>
+
+<script>
+let heartCount = 0;
+let roseCount = 0;
+
+const emojis = ["❤️","💖","💘","💝","💗","💓","💞","💕","🌹","🥀","🌷"];
+
+function createEmoji() {
+  const emoji = document.createElement("div");
+  emoji.classList.add("emoji");
+
+  const randomEmoji = emojis[Math.floor(Math.random() * emojis.length)];
+  emoji.innerText = randomEmoji;
+
+  emoji.style.left = Math.random() * 100 + "vw";
+  emoji.style.animationDuration = (2 + Math.random() * 3) + "s";
+
+  document.body.appendChild(emoji);
+
+  if (["❤️","💖","💘","💝","💗","💓","💞","💕"].includes(randomEmoji)) {
+    heartCount++;
+  } else {
+    roseCount++;
+  }
+
+  updateCounter();
+  setTimeout(() => emoji.remove(), 5000);
+}
+
+function updateCounter() {
+  document.getElementById("counter").innerText =
+    "Hearts: " + heartCount + " 🌹: " + roseCount;
+
+  const msg = document.getElementById("message");
+
+  if (heartCount >= 100 && heartCount < 200) {
+    msg.innerText = "Help karne ke liye counter on kr diya hai mene";
+  } 
+  else if (heartCount >= 200 && heartCount < 300) {
+    msg.innerText = "Ye nhi rukne waale ye chalte rhege";
+  } 
+  else if (heartCount >= 300) {
+    msg.innerText = "Tere phone ki battery dead hojaegi but heart nhi rukege";
+  }
+}
+
+setInterval(createEmoji, 35);
+
+/* MUSIC PLAYER */
+let currentButton = null;
+let player = document.getElementById("player");
+
+function formatTime(sec) {
+  sec = Math.floor(sec || 0);
+  let m = Math.floor(sec / 60);
+  let s = sec % 60;
+  return m + ":" + (s < 10 ? "0" + s : s);
+}
+
+function playSong(file, btn) {
+
+  const title = btn.querySelector(".title");
+  const controls = btn.querySelector(".controls");
+  const timeText = btn.querySelector(".time");
+  const seek = btn.querySelector(".seek");
+
+  if (currentButton && currentButton !== btn) {
+    currentButton.classList.remove("active");
+    currentButton.querySelector(".controls").style.display = "none";
+    currentButton.querySelector(".title").innerText =
+      currentButton.dataset.name;
+  }
+
+  if (!btn.dataset.name) {
+    btn.dataset.name = title.innerText;
+  }
+
+  if (currentButton === btn && !player.paused) {
+    player.pause();
+    title.innerText = "▶️ Resume";
+    return;
+  }
+
+  title.innerText = "⏳ Loading...";
+  currentButton = btn;
+  btn.classList.add("active");
+
+  player.src = file;
+
+  player.oncanplay = () => {
+    player.play();
+    title.innerText = "⏸️ Pause";
+    controls.style.display = "block";
+  };
+
+  player.ontimeupdate = () => {
+    const current = player.currentTime;
+    const duration = player.duration;
+
+    timeText.innerText =
+      formatTime(current) + " / " + formatTime(duration);
+
+    seek.value = (current / duration) * 100 || 0;
+  };
+
+  seek.oninput = () => {
+    if (player.duration) {
+      player.currentTime = (seek.value / 100) * player.duration;
+    }
+  };
+
+  player.onpause = () => {
+    if (currentButton === btn) {
+      title.innerText = "▶️ Resume";
+    }
+  };
+
+  player.onplaying = () => {
+    if (currentButton === btn) {
+      title.innerText = "⏸️ Pause";
+    }
+  };
+}
+</script>
+
+</body>
+</html>
