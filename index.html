@@ -2,21 +2,22 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Hearts & Roses 🌹💖</title>
 
 <style>
 body {
   margin: 0;
-  overflow: hidden;
-  overflow-x: hidden;
   background: black;
   color: white;
   font-family: Arial, sans-serif;
   text-align: center;
-  padding-bottom: 45vh;
+
+  overflow-x: hidden;
+  overflow-y: auto;   /* ✅ allow scroll */
 }
 
+/* Counter */
 #counter {
   position: fixed;
   top: 10px;
@@ -26,6 +27,7 @@ body {
   z-index: 10;
 }
 
+/* Message */
 #message {
   position: fixed;
   top: 40px;
@@ -40,9 +42,10 @@ body {
   z-index: 10;
 }
 
+/* Emojis */
 .emoji {
   position: absolute;
-  font-size: 24px;
+  font-size: 22px;
   animation: fall linear infinite;
 }
 
@@ -51,35 +54,31 @@ body {
   to { transform: translateY(110vh); }
 }
 
-/* Music Panel */
+/* ✅ FIXED MUSIC PANEL (mobile friendly) */
 #music {
-  position: fixed;
-  bottom: 0;
-  width: 100%;
-  max-height: 40vh;
-  overflow-y: auto;
-  background: rgba(0,0,0,0.9);
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: center;
-  padding: 5px;
+  margin-top: 120px;   /* push below fixed header */
+  padding-bottom: 20px;
 }
 
+/* ✅ Buttons full width (no cutoff) */
 button {
-  width: 48%;
-  margin: 1%;
-  padding: 8px;
+  display: block;
+  width: 95%;
+  margin: 6px auto;
+  padding: 10px;
   border-radius: 10px;
   border: none;
   background: pink;
   text-align: left;
-  font-size: 12px;
+  font-size: 14px;
 }
 
+/* Active */
 button.active {
   background: hotpink;
 }
 
+/* Controls */
 .controls {
   display: none;
   margin-top: 5px;
@@ -100,7 +99,7 @@ button.active {
 
 <div id="music">
 
-<!-- ALL 11 SONGS -->
+<!-- ALL 11 SONGS (UNCHANGED) -->
 
 <button onclick="playSong('Love Me Thoda Aur Yaariyan 320 Kbps.mp3', this)">
 <span class="title">Love Me Thoda Aur</span>
@@ -152,6 +151,11 @@ button.active {
 <div class="controls"><span class="time">0:00 / 0:00</span><input type="range" class="seek"></div>
 </button>
 
+<button onclick="playSong('Dhokha Dhadi R... Rajkumar 320 Kbps.mp3', this)">
+<span class="title">Dhokha Dhadi</span>
+<div class="controls"><span class="time">0:00 / 0:00</span><input type="range" class="seek"></div>
+</button>
+
 </div>
 
 <script>
@@ -168,7 +172,7 @@ function createEmoji() {
   emoji.innerText = randomEmoji;
 
   emoji.style.left = Math.random() * 100 + "vw";
-  emoji.style.animationDuration = (2 + Math.random() * 3) + "s";
+  emoji.style.animationDuration = (3 + Math.random() * 3) + "s";
 
   document.body.appendChild(emoji);
 
@@ -179,7 +183,7 @@ function createEmoji() {
   }
 
   updateCounter();
-  setTimeout(() => emoji.remove(), 5000);
+  setTimeout(() => emoji.remove(), 6000);
 }
 
 function updateCounter() {
@@ -199,9 +203,10 @@ function updateCounter() {
   }
 }
 
-setInterval(createEmoji, 35);
+/* ✅ Reduced load (important for mobile) */
+setInterval(createEmoji, 120);
 
-/* MUSIC PLAYER */
+/* MUSIC PLAYER (UNCHANGED CORE) */
 let currentButton = null;
 let player = document.getElementById("player");
 
