@@ -12,12 +12,10 @@ body {
   color: white;
   font-family: Arial, sans-serif;
   text-align: center;
-
   overflow-x: hidden;
-  overflow-y: auto;   /* ✅ allow scroll */
+  overflow-y: auto;
 }
 
-/* Counter */
 #counter {
   position: fixed;
   top: 10px;
@@ -27,7 +25,6 @@ body {
   z-index: 10;
 }
 
-/* Message */
 #message {
   position: fixed;
   top: 40px;
@@ -42,7 +39,6 @@ body {
   z-index: 10;
 }
 
-/* Emojis */
 .emoji {
   position: absolute;
   font-size: 22px;
@@ -54,13 +50,11 @@ body {
   to { transform: translateY(110vh); }
 }
 
-/* ✅ FIXED MUSIC PANEL (mobile friendly) */
 #music {
-  margin-top: 120px;   /* push below fixed header */
+  margin-top: 120px;
   padding-bottom: 20px;
 }
 
-/* ✅ Buttons full width (no cutoff) */
 button {
   display: block;
   width: 95%;
@@ -73,12 +67,10 @@ button {
   font-size: 14px;
 }
 
-/* Active */
 button.active {
   background: hotpink;
 }
 
-/* Controls */
 .controls {
   display: none;
   margin-top: 5px;
@@ -99,7 +91,7 @@ button.active {
 
 <div id="music">
 
-<!-- ALL 11 SONGS (UNCHANGED) -->
+<!-- SONGS (UNCHANGED) -->
 
 <button onclick="playSong('Love Me Thoda Aur Yaariyan 320 Kbps.mp3', this)">
 <span class="title">Love Me Thoda Aur</span>
@@ -203,10 +195,8 @@ function updateCounter() {
   }
 }
 
-/* ✅ Reduced load (important for mobile) */
 setInterval(createEmoji, 120);
 
-/* MUSIC PLAYER (UNCHANGED CORE) */
 let currentButton = null;
 let player = document.getElementById("player");
 
@@ -241,11 +231,25 @@ function playSong(file, btn) {
     return;
   }
 
-  title.innerText = "⏳ Loading...";
+  title.innerText = "⏳ Loading... 0%";
   currentButton = btn;
   btn.classList.add("active");
 
   player.src = file;
+
+  // 🔥 PROGRESS TRACKING
+  player.onprogress = () => {
+    if (player.buffered.length > 0 && player.duration) {
+      let bufferedEnd = player.buffered.end(0);
+      let percent = Math.floor((bufferedEnd / player.duration) * 100);
+
+      if (percent > 100) percent = 100;
+
+      if (player.readyState < 4) {
+        title.innerText = "⏳ Loading... " + percent + "%";
+      }
+    }
+  };
 
   player.oncanplay = () => {
     player.play();
