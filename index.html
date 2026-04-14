@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes, viewport-fit=cover">
-<title>Hearts & Roses 🌹💖 – Now Playing</title>
+<title>For my sona baby</title>
 
 <style>
 * {
@@ -20,7 +20,7 @@ body {
   text-align: center;
   overflow-x: hidden;
   touch-action: pan-y;
-  padding-bottom: 140px; /* space for bottom controls */
+  padding-bottom: 140px;
 }
 
 /* Counter & Message – Lavender */
@@ -34,24 +34,32 @@ body {
   text-shadow: 0 0 2px #000;
   font-weight: bold;
   padding: 0 10px;
+  background: rgba(0,0,0,0.4);
+  padding: 5px;
+  border-radius: 20px;
+  width: fit-content;
+  left: 50%;
+  transform: translateX(-50%);
+  white-space: nowrap;
 }
 
 #message {
   position: fixed;
-  top: 45px;
+  top: 55px;
   width: 90%;
   left: 5%;
-  color: #E6E6FA;
-  font-size: clamp(12px, 4vw, 16px);
+  color:#1E132B;
+  font-size: clamp(20px, 4vw, 24px);
   z-index: 10;
-  font-weight: 500;
-  background: rgba(0,0,0,0.5);
-  padding: 8px 12px;
+  font-weight: bold;
+  background: #967BB6;
+  padding: 10px 12px;
   border-radius: 30px;
-  backdrop-filter: blur(3px);
-  white-space: nowrap;
-  overflow-x: auto;
-  text-overflow: ellipsis;
+  backdrop-filter: blur(25px);
+  text-align: center;
+  transition: all 0.3s ease;
+  border: 1px solid #FFB7B2;
+  box-shadow: 0 0 10px rgba(255, 183, 178, 0.3);
 }
 
 /* Falling Emojis */
@@ -187,7 +195,6 @@ body {
   box-shadow: 0 -5px 20px rgba(0,0,0,0.6);
 }
 
-/* Song items – pastel colors */
 .songItem {
   padding: 14px 18px;
   margin: 8px 16px;
@@ -209,7 +216,6 @@ body {
   display: none;
 }
 
-/* Scrollbar */
 #songBox::-webkit-scrollbar {
   width: 6px;
 }
@@ -220,19 +226,13 @@ body {
   background: #c7a4ff;
   border-radius: 10px;
 }
-
-/* Hide status when playing */
-#audioStatus {
-  display: none;
-}
 </style>
 </head>
 <body>
 
 <div id="counter">💕 Hearts: 0 🌹 Roses: 0</div>
-<div id="message">🎵 pick a song – pastel dreams await 🎨</div>
+<div id="message">✨ Keep watching! Emojis are falling... ✨</div>
 
-<!-- NOW PLAYING SECTION -->
 <div id="nowPlaying" style="display: none;">
   <div id="songTitle">✨ No song playing</div>
   <div id="timelineContainer">
@@ -246,7 +246,6 @@ body {
 <button id="exploreBtn">🌸 Explore Songs 🎶</button>
 <div id="songBox"></div>
 <audio id="player"></audio>
-
 <div id="music"></div>
 
 <script>
@@ -254,13 +253,12 @@ let player = document.getElementById("player");
 let audioUnlocked = false;
 let currentSongName = "";
 
-// DOM elements
-const nowPlayingDiv = document.getElementById("nowPlaying");
-const songTitleSpan = document.getElementById("songTitle");
-const seekSlider = document.getElementById("seekSlider");
-const currentTimeSpan = document.getElementById("currentTime");
-const durationSpan = document.getElementById("duration");
-const playPauseBtn = document.getElementById("playPauseBtn");
+let nowPlayingDiv = document.getElementById("nowPlaying");
+let songTitleSpan = document.getElementById("songTitle");
+let seekSlider = document.getElementById("seekSlider");
+let currentTimeSpan = document.getElementById("currentTime");
+let durationSpan = document.getElementById("duration");
+let playPauseBtn = document.getElementById("playPauseBtn");
 
 /* ========== MOBILE AUDIO UNLOCK ========== */
 function unlockAudio() {
@@ -280,10 +278,9 @@ document.body.addEventListener("click", unlockAudio);
 /* ========== UPDATE TIMELINE ========== */
 function updateTimeline() {
   if (!isNaN(player.duration) && player.duration !== Infinity) {
-    const progress = (player.currentTime / player.duration) * 100;
     seekSlider.value = player.currentTime;
-    durationSpan.innerText = formatTime(player.duration);
     currentTimeSpan.innerText = formatTime(player.currentTime);
+    durationSpan.innerText = formatTime(player.duration);
   }
 }
 
@@ -303,9 +300,6 @@ player.addEventListener("loadedmetadata", () => {
 
 seekSlider.addEventListener("input", (e) => {
   player.currentTime = e.target.value;
-  if (player.paused && player.currentTime > 0) {
-    // optional: keep paused
-  }
 });
 
 playPauseBtn.addEventListener("click", () => {
@@ -377,7 +371,6 @@ songs.forEach((song, index) => {
       nowPlayingDiv.style.display = "block";
       playPauseBtn.innerText = "⏸ Pause";
       
-      // Reset timeline
       setTimeout(() => {
         if (!isNaN(player.duration)) {
           seekSlider.max = player.duration;
@@ -397,21 +390,73 @@ function toggleSongs() {
 }
 document.getElementById("exploreBtn").onclick = toggleSongs;
 
-/* EMOJIS */
+/* ========== EMOJI COUNTER WITH MILESTONE MESSAGES ========== */
 let hearts = 0, roses = 0;
+let totalCount = 0;
+let lastMilestone = 0;
+
+// Message element
+const messageDiv = document.getElementById("message");
+
+// Function to update message based on total count
+function updateMilestoneMessage(total) {
+  let newMessage = "";
+  
+  if (total >= 100 && total < 300) {
+    newMessage = "💖 Ab ye heart nhi rukne waale! 💖";
+  } 
+  else if (total >= 300 && total < 500) {
+    newMessage = "Bore na ho uske liye music bhi add kiya hai. ";
+  } 
+  else if (total >= 500 && total < 700) {
+    newMessage = "Explore songs pe jaao & mere top 11 songs me se 1 pick krlo";
+  }
+  else if (total >= 700 && total < 900) {
+    newMessage = "Phone ki battery dead hojaegi but emojis nhi!";
+  }
+  
+  else if (total >= 900) {
+    newMessage = "Emojis kabhi nahi rukenge! 🌹💕";
+  }
+  else {
+    newMessage = "✨ Keep watching! Emojis are falling... ✨";
+  }
+  
+  // Only update if message changed
+  if (messageDiv.innerText !== newMessage) {
+    messageDiv.innerText = newMessage;
+    // Add a little animation flash
+    messageDiv.style.transform = "scale(1.02)";
+    setTimeout(() => {
+      messageDiv.style.transform = "scale(1)";
+    }, 300);
+  }
+}
 
 let emojis = [
   "❤️", "💖", "💘", "💝", "💗", "💓", "💞", "💕",
-  "❣️", "💌", "❤️‍🔥", "💟", "🧡", "💛", "💚", "💙", "💜",
-  "🌹", "🥀", "🌺", "🌸", "🌼", "🌻", "🌷", "🏵️", "💐"
+  "❣️",
+  "🌹", "🌺", "🌸", "🌼", "🌷", "💐"
 ];
+
+// Separate hearts and roses for weighted probability
+let heartsList = ["❤️", "💖", "💘", "💝", "💗", "💓", "💞", "💕", "❣️"];
+let rosesList = ["🌹", "🌺", "🌸", "🌷","💐"];
 
 function createEmoji() {
   let e = document.createElement("div");
   e.className = "emoji";
   
-  let rand = emojis[Math.floor(Math.random() * emojis.length)];
+  // 80% chance for hearts, 20% for roses
+  let isHeart = Math.random() < 0.8;
+  let rand;
+  if (isHeart) {
+    rand = heartsList[Math.floor(Math.random() * heartsList.length)];
+  } else {
+    rand = rosesList[Math.floor(Math.random() * rosesList.length)];
+  }
   e.innerText = rand;
+  
   
   e.style.left = Math.random() * 100 + "vw";
   e.style.animationDuration = (2 + Math.random() * 3) + "s";
@@ -419,17 +464,26 @@ function createEmoji() {
   
   document.body.appendChild(e);
   
-  if (["🌹","🥀","🌺","🌸","🌼","🌻","🌷","🏵️","💐"].includes(rand)) {
+  // Count hearts vs roses
+  if (["🌹","🌺","🌸","🌼","🌷","💐"].includes(rand)) {
     roses++;
   } else {
     hearts++;
   }
   
+  totalCount = hearts;
+  
+  // Update counter display
   document.getElementById("counter").innerHTML = `💕 Hearts: ${hearts} 🌹 Roses: ${roses}`;
+  
+  // Check and update milestone message
+  updateMilestoneMessage(totalCount);
+  
   setTimeout(() => e.remove(), 5000);
 }
 
-setInterval(createEmoji, 130);
+// Create emojis every 100ms for faster milestone achievement
+setInterval(createEmoji, 30);
 </script>
 
 </body>
