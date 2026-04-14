@@ -3,134 +3,161 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Hearts & Roses 🌹💖</title>
+<title>Hearts & Roses 🌹💖 – Pastel Edition</title>
 
 <style>
 body {
   margin: 0;
   background: black;
-  color: white;
-  font-family: Arial;
+  font-family: 'Segoe UI', Arial, sans-serif;
   text-align: center;
   overflow-x: hidden;
 }
 
-/* Header */
+/* Counter & Message – Lavender & Pastel */
 #counter {
   position: fixed;
   top: 10px;
   width: 100%;
-  font-size: 16px;
+  font-size: 18px;
   z-index: 10;
+  color: #DCD0FF;   /* soft lavender */
+  text-shadow: 0 0 2px #000;
+  font-weight: bold;
 }
 
 #message {
   position: fixed;
-  top: 40px;
+  top: 45px;
   width: 100%;
-  color: yellowgreen;
+  color: #E6E6FA;   /* lavender */
+  font-size: 18px;
   z-index: 10;
+  font-weight: 500;
+  letter-spacing: 0.5px;
+  background: rgba(0,0,0,0.4);
+  padding: 5px;
+  border-radius: 30px;
+  width: fit-content;
+  margin-left: auto;
+  margin-right: auto;
+  left: 0;
+  right: 0;
+  backdrop-filter: blur(2px);
 }
 
-/* Emojis */
+/* Falling Emojis */
 .emoji {
   position: absolute;
-  font-size: 22px;
+  font-size: 26px;
   animation: fall linear infinite;
+  pointer-events: none;
+  z-index: 5;
 }
 @keyframes fall {
   from { transform: translateY(-10vh); }
   to { transform: translateY(110vh); }
 }
 
-/* Explore Button */
+/* Explore Button – Pastel Pink */
 #exploreBtn {
   position: fixed;
   bottom: 20px;
   left: 50%;
   transform: translateX(-50%);
-  padding: 10px 15px;
-  border-radius: 20px;
+  padding: 12px 24px;
+  border-radius: 40px;
   border: none;
-  background: hotpink;
-  color: white;
+  background: #FFB7B2;   /* pastel pink */
+  color: #3b2b2b;
+  font-weight: bold;
+  font-size: 1rem;
+  cursor: pointer;
   z-index: 20;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+  transition: 0.2s;
+}
+#exploreBtn:hover {
+  background: #ffa69e;
+  transform: translateX(-50%) scale(1.02);
 }
 
-/* Popup */
+/* Song Popup Panel */
 #songBox {
   position: fixed;
   bottom: 0;
   width: 100%;
-  max-height: 60%;
-  background: #111;
+  max-height: 65%;
+  background: #1a1a2e;   /* deep dark with purple hue */
   display: none;
   overflow-y: auto;
   z-index: 20;
-  border-radius: 15px 15px 0 0;
+  border-radius: 28px 28px 0 0;
+  padding: 12px 0;
+  box-shadow: 0 -5px 20px rgba(0,0,0,0.5);
 }
 
+/* Each song item – different pastel background */
 .songItem {
-  padding: 12px;
-  border-bottom: 1px solid #333;
+  padding: 14px 18px;
+  margin: 8px 16px;
+  border-radius: 60px;
+  font-weight: bold;
+  text-align: center;
+  cursor: pointer;
+  transition: 0.2s;
+  color: #1e2a2e;
+  backdrop-filter: brightness(0.98);
+  box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+}
+.songItem:hover {
+  transform: scale(1.01);
+  filter: brightness(0.96);
+  box-shadow: 0 4px 12px rgba(0,0,0,0.2);
 }
 
-/* Hidden original buttons */
+/* Hide original music buttons container */
 #music {
   display: none;
 }
+
+/* Scrollbar pastel touch */
+#songBox::-webkit-scrollbar {
+  width: 6px;
+}
+#songBox::-webkit-scrollbar-track {
+  background: #2d2d44;
+}
+#songBox::-webkit-scrollbar-thumb {
+  background: #c7a4ff;
+  border-radius: 10px;
+}
 </style>
 </head>
-
 <body>
 
-<div id="counter">Hearts: 0 🌹: 0</div>
-<div id="message"></div>
+<div id="counter">💕 Hearts: 0  🌹 Roses: 0</div>
+<div id="message">🎵 every song blooms with a different pastel dream 🎨</div>
 
-<button id="exploreBtn" onclick="toggleSongs()">🎵 Explore Songs</button>
+<button id="exploreBtn" onclick="toggleSongs()">🌸 Explore Songs 🎶</button>
 
 <div id="songBox"></div>
 
 <audio id="player"></audio>
 
-<!-- ORIGINAL SONG BUTTONS (hidden but used for logic) -->
+<!-- hidden original song structure (kept for compatibility) -->
 <div id="music">
-
-<button onclick="playSong('Love Me Thoda Aur Yaariyan 320 Kbps.mp3', this)">
-<span class="title">Love Me Thoda Aur</span>
-<div class="controls"><span class="time"></span><input type="range" class="seek"></div>
-</button>
-
-<button onclick="playSong('Waalian Harnoor 320 Kbps.mp3', this)">
-<span class="title">Waalian</span></button>
-
-<button onclick="playSong('Tu Hi Haqeeqat Tum Mile Original Motion Picturetrack 320 Kbps.mp3', this)">
-<span class="title">Tu Hi Haqeeqat</span></button>
-
-<button onclick="playSong('Thinking Of You Ap Dhillon 320 Kbps.mp3', this)">
-<span class="title">Thinking Of You</span></button>
-
-<button onclick="playSong('Tera Hone Laga Hoon Ajab Prem Ki Ghazab Kahani 320 Kbps.mp3', this)">
-<span class="title">Tera Hone Laga Hu</span></button>
-
-<button onclick="playSong('Soniyo Raaz The Mystery Continuous 320 Kbps.mp3', this)">
-<span class="title">Soniyo</span></button>
-
-<button onclick="playSong('Mere Rang Mein Rangne Wali Maine Pyar Kiya 320 Kbps.mp3', this)">
-<span class="title">Mere Rang Mein</span></button>
-
-<button onclick="playSong('Main Rang Sharbaton Ka Phata Poster Nikhla Hero 320 Kbps.mp3', this)">
-<span class="title">Main Rang Sharbaton Ka</span></button>
-
-<button onclick="playSong('Ishq Bulaava Hasee Toh Phasee 320 Kbps.mp3', this)">
-<span class="title">Ishq Bulaava</span></button>
-
-<button onclick="playSong('Girl I Need You Baaghi 320 Kbps.mp3', this)">
-<span class="title">Girl I Need You</span></button>
-
-<button onclick="playSong('Dhokha Dhadi R... Rajkumar 320 Kbps.mp3', this)">
-<span class="title">Dhokha Dhadi</span></button>
-
+<button onclick="playSong('Love Me Thoda Aur Yaariyan 320 Kbps.mp3', this)"><span class="title">Love Me Thoda Aur</span><div class="controls"><span class="time"></span><input type="range" class="seek"></div></button>
+<button onclick="playSong('Waalian Harnoor 320 Kbps.mp3', this)"><span class="title">Waalian</span></button>
+<button onclick="playSong('Tu Hi Haqeeqat Tum Mile Original Motion Picturetrack 320 Kbps.mp3', this)"><span class="title">Tu Hi Haqeeqat</span></button>
+<button onclick="playSong('Thinking Of You Ap Dhillon 320 Kbps.mp3', this)"><span class="title">Thinking Of You</span></button>
+<button onclick="playSong('Tera Hone Laga Hoon Ajab Prem Ki Ghazab Kahani 320 Kbps.mp3', this)"><span class="title">Tera Hone Laga Hu</span></button>
+<button onclick="playSong('Soniyo Raaz The Mystery Continuous 320 Kbps.mp3', this)"><span class="title">Soniyo</span></button>
+<button onclick="playSong('Mere Rang Mein Rangne Wali Maine Pyar Kiya 320 Kbps.mp3', this)"><span class="title">Mere Rang Mein</span></button>
+<button onclick="playSong('Main Rang Sharbaton Ka Phata Poster Nikhla Hero 320 Kbps.mp3', this)"><span class="title">Main Rang Sharbaton Ka</span></button>
+<button onclick="playSong('Ishq Bulaava Hasee Toh Phasee 320 Kbps.mp3', this)"><span class="title">Ishq Bulaava</span></button>
+<button onclick="playSong('Girl I Need You Baaghi 320 Kbps.mp3', this)"><span class="title">Girl I Need You</span></button>
+<button onclick="playSong('Dhokha Dhadi R... Rajkumar 320 Kbps.mp3', this)"><span class="title">Dhokha Dhadi</span></button>
 </div>
 
 <script>
@@ -151,54 +178,89 @@ const songs = [
 {name:"Dhokha Dhadi", file:"Dhokha Dhadi R... Rajkumar 320 Kbps.mp3"}
 ];
 
+/* ---------- PASTEL COLOR PALETTE for each song option ---------- */
+const pastelColors = [
+  "#FFB7B2",  // pastel pink
+  "#B5EAD7",  // mint
+  "#FFDAC1",  // peach
+  "#C7CEEA",  // periwinkle
+  "#E2F0CB",  // soft lime
+  "#FDE2C4",  // sand
+  "#FFC8DD",  // baby rose
+  "#BDE0FE",  // baby blue
+  "#D4E2D4",  // sage
+  "#FBC8B5",  // apricot
+  "#E6E6FA",  // lavender
+  "#C9E4DE",  // seafoam
+  "#FED7B0",  // warm apricot
+  "#F9D6E0"   // cotton candy
+];
+
 let songBox = document.getElementById("songBox");
 
-/* CREATE POPUP LIST */
-songs.forEach(song => {
+/* CREATE POPUP LIST with DIFFERENT PASTEL BACKGROUNDS */
+songs.forEach((song, index) => {
   let div = document.createElement("div");
   div.className = "songItem";
   div.innerText = song.name;
-
+  
+  // assign a unique pastel color (cycle through palette)
+  let colorIndex = index % pastelColors.length;
+  div.style.backgroundColor = pastelColors[colorIndex];
+  div.style.color = "#2c3e2f";   // deep green-gray for contrast
+  div.style.textShadow = "none";
+  
   div.onclick = () => {
     player.src = song.file;
     player.play();
     songBox.style.display = "none";
   };
-
+  
   songBox.appendChild(div);
 });
 
 /* TOGGLE POPUP */
 function toggleSongs() {
-  songBox.style.display =
-    songBox.style.display === "block" ? "none" : "block";
+  songBox.style.display = songBox.style.display === "block" ? "none" : "block";
 }
 
-/* EMOJIS */
+/* ---------- MORE INTERESTING HEART & ROSE EMOJIS ---------- */
 let hearts = 0, roses = 0;
-let emojis = ["❤️","💖","💘","💝","💗","💓","💞","💕","🌹","🥀","🌷"];
+
+// Expanded collection: hearts + creative heart variations, plus rose & romantic flowers
+let emojis = [
+  "❤️", "💖", "💘", "💝", "💗", "💓", "💞", "💕"        // classic hearts
+  "❣️", "💌", "❤️‍🔥",                                    // extra heart vibes
+  "🌹", "🌺", "🌸", "🌼", "🌻", "🌷", "🏵️", "💐"     // roses + romantic flowers
+];
 
 function createEmoji() {
   let e = document.createElement("div");
   e.className = "emoji";
-
-  let rand = emojis[Math.floor(Math.random()*emojis.length)];
+  
+  let rand = emojis[Math.floor(Math.random() * emojis.length)];
   e.innerText = rand;
-
-  e.style.left = Math.random()*100+"vw";
-  e.style.animationDuration = (3+Math.random()*3)+"s";
-
+  
+  e.style.left = Math.random() * 100 + "vw";
+  e.style.animationDuration = (1.5 + Math.random() * 2) + "s";
+  e.style.fontSize = (20 + Math.random() * 18) + "px";
+  
   document.body.appendChild(e);
-
-  if (rand === "🌹") roses++; else hearts++;
-
-  document.getElementById("counter").innerText =
-    "Hearts: "+hearts+" 🌹: "+roses;
-
-  setTimeout(()=>e.remove(),6000);
+  
+  // count roses (🌹, 🌺, 🌸, 🌼, 🌻, 🌷, 🏵️, 💐) as roses? Keep original spirit: count classical rose + similar flowers as "roses"
+  if (rand === "🌹" || rand === "🌺" || rand === "🌸" || rand === "🌼" || rand === "🌻" || rand === "🌷" || rand === "🏵️" || rand === "💐") {
+    roses++;
+  } else {
+    hearts++;
+  }
+  
+  document.getElementById("counter").innerHTML = `💕 Hearts: ${hearts}  🌹 Roses: ${roses}`;
+  
+  setTimeout(() => e.remove(), 6000);
 }
 
-setInterval(createEmoji,120);
+// create emojis more frequently for a lively feel
+setInterval(createEmoji, 35);
 </script>
 
 </body>
