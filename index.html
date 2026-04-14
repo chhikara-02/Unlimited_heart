@@ -16,6 +16,7 @@ body {
   overflow-y: auto;
 }
 
+/* Header */
 #counter {
   position: fixed;
   top: 10px;
@@ -34,11 +35,12 @@ body {
   padding: 10px;
   font-size: 16px;
   color: rgb(167, 204, 35);
-  background: rgba(0, 0, 0, 0.65);
+  background: rgba(0,0,0,0.65);
   border-radius: 12px;
   z-index: 10;
 }
 
+/* Emojis */
 .emoji {
   position: absolute;
   font-size: 22px;
@@ -50,30 +52,43 @@ body {
   to { transform: translateY(110vh); }
 }
 
+/* MUSIC */
 #music {
   margin-top: 120px;
-  padding-bottom: 20px;
+  padding-bottom: 30px;
 }
 
+/* SMALL DEFAULT */
 button {
   display: block;
-  width: 95%;
+  width: 92%;
   margin: 6px auto;
-  padding: 10px;
-  border-radius: 10px;
+  padding: 8px;
+  border-radius: 8px;
   border: none;
-  background: pink;
+  background: #222;
+  color: white;
   text-align: left;
-  font-size: 14px;
+  font-size: 13px;
+  transition: all 0.3s ease;
 }
 
+/* EXPANDED ACTIVE */
 button.active {
   background: hotpink;
+  padding: 14px;
+  font-size: 15px;
+  transform: scale(1.03);
 }
 
+/* controls */
 .controls {
   display: none;
-  margin-top: 5px;
+  margin-top: 6px;
+}
+
+button.active .controls {
+  display: block;
 }
 
 .seek {
@@ -91,7 +106,7 @@ button.active {
 
 <div id="music">
 
-<!-- SONGS (UNCHANGED) -->
+<!-- ✅ ALL 11 SONGS -->
 
 <button onclick="playSong('Love Me Thoda Aur Yaariyan 320 Kbps.mp3', this)">
 <span class="title">Love Me Thoda Aur</span>
@@ -181,18 +196,6 @@ function createEmoji() {
 function updateCounter() {
   document.getElementById("counter").innerText =
     "Hearts: " + heartCount + " 🌹: " + roseCount;
-
-  const msg = document.getElementById("message");
-
-  if (heartCount >= 100 && heartCount < 200) {
-    msg.innerText = "Help karne ke liye counter on kr diya hai mene";
-  } 
-  else if (heartCount >= 200 && heartCount < 300) {
-    msg.innerText = "Ye nhi rukne waale ye chalte rhege";
-  } 
-  else if (heartCount >= 300) {
-    msg.innerText = "Tere phone ki battery dead hojaegi but heart nhi rukege";
-  }
 }
 
 setInterval(createEmoji, 120);
@@ -210,13 +213,11 @@ function formatTime(sec) {
 function playSong(file, btn) {
 
   const title = btn.querySelector(".title");
-  const controls = btn.querySelector(".controls");
   const timeText = btn.querySelector(".time");
   const seek = btn.querySelector(".seek");
 
   if (currentButton && currentButton !== btn) {
     currentButton.classList.remove("active");
-    currentButton.querySelector(".controls").style.display = "none";
     currentButton.querySelector(".title").innerText =
       currentButton.dataset.name;
   }
@@ -237,12 +238,9 @@ function playSong(file, btn) {
 
   player.src = file;
 
-  // 🔥 PROGRESS TRACKING
   player.onprogress = () => {
     if (player.buffered.length > 0 && player.duration) {
-      let bufferedEnd = player.buffered.end(0);
-      let percent = Math.floor((bufferedEnd / player.duration) * 100);
-
+      let percent = Math.floor((player.buffered.end(0) / player.duration) * 100);
       if (percent > 100) percent = 100;
 
       if (player.readyState < 4) {
@@ -254,7 +252,6 @@ function playSong(file, btn) {
   player.oncanplay = () => {
     player.play();
     title.innerText = "⏸️ Pause";
-    controls.style.display = "block";
   };
 
   player.ontimeupdate = () => {
@@ -274,15 +271,11 @@ function playSong(file, btn) {
   };
 
   player.onpause = () => {
-    if (currentButton === btn) {
-      title.innerText = "▶️ Resume";
-    }
+    if (currentButton === btn) title.innerText = "▶️ Resume";
   };
 
   player.onplaying = () => {
-    if (currentButton === btn) {
-      title.innerText = "⏸️ Pause";
-    }
+    if (currentButton === btn) title.innerText = "⏸️ Pause";
   };
 }
 </script>
